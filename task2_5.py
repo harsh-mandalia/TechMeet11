@@ -29,7 +29,7 @@ frame_height = int(cap.get(4))
    
 size = (frame_width, frame_height)
 print(size)
-out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'MJPG'), 10.0, size)
+out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'MJPG'), 15.0, size)
 
 global error_z, error_z_prev, z_dot, z_prev
 error_z      = 0.0
@@ -125,7 +125,7 @@ def path_xy(x1,y1,x2,y2,t,ti,tf):
         x_d = x2
         y_d = y2
     
-    print(x_d,y_d)
+    # print(x_d,y_d)
     return int(x_d),int(y_d)
 
 
@@ -144,6 +144,7 @@ error_z_int=0
 
 firstflag_green = 1
 firstflag_red = 1
+x,y=0,0
 
 while True:
     # Capture frame-by-frame
@@ -164,27 +165,33 @@ while True:
     # Find contours in green mask
     green_contours, green_hierarchy = cv2.findContours(green_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    x1,x2,y1,y2 = 0,0,0,0
-    w1,w2,h1,h2 = 0,0,0,0
+    # x1,x2,y1,y2 = 0,0,0,0
+    # w1,w2,h1,h2 = 0,0,0,0
 
-    x_d=510
-    y_d=245
-    z_d=30
+    # x_d=510
+    # y_d=245
+    # z_d=35
     
-    # x_d1,y_d1=249,120
-    # x_d2,y_d2=550,120
-    # x_d3,y_d3=550,339
-    # x_d4,y_d4=249,339
+    x_d1,y_d1=250,70
+    x_d2,y_d2=740,70
+    x_d3,y_d3=740,306
+    x_d4,y_d4=250,306
 
-    # if(t_cur<15):
-    #     x_d,y_d=path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,5-1,15-1)
-    # elif(15<t_cur<25):
-    #     x_d,y_d=path_xy(x_d2,y_d2,x_d3,y_d3,t_cur,15-1,25-1)
-    # elif(25<t_cur<35):
-    #     x_d,y_d=path_xy(x_d3,y_d3,x_d4,y_d4,t_cur,25-1,35-1)
-    # elif(35<t_cur<45):
-    #     x_d,y_d=path_xy(x_d4,y_d4,x_d1,y_d1,t_cur,35-1,45-1)
-    # z_d=30
+    t_0=10
+    t1=30
+    t2=40
+    t3=60
+    t4=70
+    # print(t_cur)
+    if(t_cur<t1):
+        x_d,y_d=path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,t_0,t1)
+    elif(t1<t_cur<t2):
+        x_d,y_d=path_xy(x_d2,y_d2,x_d3,y_d3,t_cur,t1,t2)
+    elif(t2<t_cur<t3):
+        x_d,y_d=path_xy(x_d3,y_d3,x_d4,y_d4,t_cur,t2,t3)
+    elif(t3<t_cur<t4):
+        x_d,y_d=path_xy(x_d4,y_d4,x_d1,y_d1,t_cur,t3,t4)
+    z_d=35
 
 
     # x_d,y_d = path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,5,15)
@@ -213,6 +220,7 @@ while True:
         # x_d=460
     
     area1,area2=0,0
+    xr,yr,wr,hr=x,y,0,0
     if len(red_contours) > 0:
         # enter for first time
         if firstflag_red == 1:
@@ -222,15 +230,15 @@ while True:
             red_c = max(red_contours, key=cv2.contourArea)
 
             # Draw a bounding box around the red contour
-            x1, y1, w1, h1 = cv2.boundingRect(red_c)
-            cv2.rectangle(frame, (x1, y1), (x1 + w1, y1 + h1), (0, 0, 255), 2)
+            xr, yr, wr, hr = cv2.boundingRect(red_c)
+            cv2.rectangle(frame, (xr, yr), (xr + wr, yr + hr), (0, 0, 255), 2)
 
             # Calculate the center of the bounding box
-            center_OG = (x1 + int(w1/2), y1 + int(h1/2))
-            center_OG2 = np.array([x2 + int(w2/2), y2 + int(h2/2)])
+            center_OG = (xr + int(wr/2), yr + int(hr/2))
+            center_OG2 = np.array([xr + int(wr/2), yr + int(hr/2)])
 
             # Put the coordinates on the bounding box
-            cv2.putText(frame, str(center_OG), (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            cv2.putText(frame, str(center_OG), (xr, yr-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
         # Find the closest contour to OG_red in green contours
         meanlist = []
         for i in red_contours:
@@ -250,70 +258,70 @@ while True:
         # green_c = max(green_contours, key=cv2.contourArea)
 
         # Draw a bounding box around the green contour
-        x1, y1, w1, h1 = cv2.boundingRect(new_contour_r)
-        cv2.rectangle(frame, (x1, y1), (x1 + w1, y1 + h1), (0, 0, 255), 2)
+        xr, yr, wr, hr = cv2.boundingRect(new_contour_r)
+        cv2.rectangle(frame, (xr, yr), (xr + wr, yr + hr), (0, 0, 255), 2)
 
         # Calculate the center of the bounding box
-        center = (x1 + int(w1/2), y1 + int(h1/2))
+        center_r = (xr + int(wr/2), yr + int(hr/2))
 
         # Put the coordinates on the bounding box
-        cv2.putText(frame, str(center), (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        cv2.putText(frame, str(center_r), (xr, yr-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
 
-    if len(green_contours) > 0:
-        # enter for first time
+    # if len(green_contours) > 0:
+    #     # enter for first time
 
-        if firstflag_green == 1:
+    #     if firstflag_green == 1:
             
-            firstflag_green = 2
-                    # Find the largest contour in green contours
-            green_c = max(green_contours, key=cv2.contourArea)
+    #         firstflag_green = 2
+    #                 # Find the largest contour in green contours
+    #         green_c = max(green_contours, key=cv2.contourArea)
 
-            # Draw a bounding box around the green contour
-            x2, y2, w2, h2 = cv2.boundingRect(green_c)
-            cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+    #         # Draw a bounding box around the green contour
+    #         x2, y2, w2, h2 = cv2.boundingRect(green_c)
+    #         cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
 
-            # Calculate the center of the bounding box
-            center_OG = (x2 + int(w2/2), y2 + int(h2/2))
-            center_OG2 = np.array([x2 + int(w2/2), y2 + int(h2/2)])
+    #         # Calculate the center of the bounding box
+    #         center_OG = (x2 + int(w2/2), y2 + int(h2/2))
+    #         center_OG2 = np.array([x2 + int(w2/2), y2 + int(h2/2)])
 
         
-            # Put the coordinates on the bounding box
-            cv2.putText(frame, str(center_OG), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        # Find the closest contour to OG_green in green contours
-        # print(green_contours)
-        # print(np.shape(green_contours))
-        meanlist = []
-        for i in green_contours:
-            meanlist.append(np.array([np.mean(i[:,0,0]),np.mean(i[:,0,1]),i]))
-        dist = 10000
-        for j in meanlist:
+    #         # Put the coordinates on the bounding box
+    #         cv2.putText(frame, str(center_OG), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    #     # Find the closest contour to OG_green in green contours
+    #     # print(green_contours)
+    #     # print(np.shape(green_contours))
+    #     meanlist = []
+    #     for i in green_contours:
+    #         meanlist.append(np.array([np.mean(i[:,0,0]),np.mean(i[:,0,1]),i]))
+    #     dist = 10000
+    #     for j in meanlist:
             
-            if dist > np.linalg.norm(j[0:2]-center_OG2):
-                dist = np.linalg.norm(j[0:2]-center_OG2)
-                new_center_g = j[0:2]
-                new_contour_g = j[2]
+    #         if dist > np.linalg.norm(j[0:2]-center_OG2):
+    #             dist = np.linalg.norm(j[0:2]-center_OG2)
+    #             new_center_g = j[0:2]
+    #             new_contour_g = j[2]
         
-        center_OG2 = new_center_g
-        area2=cv2.contourArea(new_contour_g)
+    #     center_OG2 = new_center_g
+    #     area2=cv2.contourArea(new_contour_g)
             
         
-        # green_c = max(green_contours, key=cv2.contourArea)
+    #     # green_c = max(green_contours, key=cv2.contourArea)
 
-        # Draw a bounding box around the green contour
-        x2, y2, w2, h2 = cv2.boundingRect(new_contour_g)
-        cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+    #     # Draw a bounding box around the green contour
+    #     x2, y2, w2, h2 = cv2.boundingRect(new_contour_g)
+    #     cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
 
-        # Calculate the center of the bounding box
-        center = (x2 + int(w2/2), y2 + int(h2/2))
+    #     # Calculate the center of the bounding box
+    #     center = (x2 + int(w2/2), y2 + int(h2/2))
 
-        # Put the coordinates on the bounding box
-        cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    #     # Put the coordinates on the bounding box
+    #     cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    x = (x1+x2)/2
-    y = (y1+y2)/2
+    x = xr
+    y = yr
 
-    print(area1,area2)
+    # print(area1,area2)
 
     ################## for x
 
@@ -369,10 +377,9 @@ while True:
     if(y>854):
         y=854
 
-    z=np.round(distfunc(x1,y1,x2,y2),2)
+    z=np.round((wr**2+hr**2)**0.5,2)
 
     ################## for z
-
 
     # z19=z18
     # z18=z17
@@ -434,26 +441,42 @@ while True:
     if(error_y_dot>cap_y):
         error_y_dot=cap_y
 
-    kp_z=58    #57
-    kd_z=400    #365-456
-    ki_z=0.00
-    throttle_offset=60
+    kp_z=15
+    kd_z=350    #365-456
+    ki_z=0.0
+    throttle_offset=50
 
-    kp_x=0.5
-    kd_x=5
+
+    kp_x=1
+    kd_x=20
     
-    kp_y=0.5
-    kd_y=5
+    kp_y=1
+    kd_y=20
     kp_zx = 0
+
+    if(t_cur<5):
+        print("inside")
+        kp_z=7
+        kp_x=0
+        kd_x=0
+        kp_y=0
+        kd_y=0
+        kp_zx = 0
     
-    pitch = int(1500 + kp_x*error_x + kd_x*error_x_dot)
+    pitch = int(1500 +12+ kp_x*error_x + kd_x*error_x_dot)
     roll = int(1500 + kp_y*error_y + kd_y*error_y_dot)
     throttle = int(1500 + throttle_offset + kp_z*error_z + kd_z*error_z_dot + ki_z*error_z_int + kp_zx*error_x)
     
-    # if(throttle>1750):
-    #     throttle=1750
-    # elif(throttle<1250):
-    #     throttle=1250
+    if(pitch>1550):
+        pitch=1550
+    elif(pitch<1450):
+        pitch=1450
+
+    if(roll>1550):
+        roll=1550
+    elif(roll<1450):
+        roll=1450
+        
     if(start_vel_flag==1):
         throttle=1500
         start_vel_flag=0
@@ -461,7 +484,7 @@ while True:
     
     t_cur = time.time() - t0
 
-    print("ez, ", np.round(kp_z*error_z,1), "ex_d",np.round(kd_z*error_z_dot,1), "ez_int", np.round(ki_z*error_z_int,1),end=" ")
+    print("ez, ", np.round(kp_z*error_z,1), "ex_d", np.round(kd_z*error_z_dot,1) ,end=" ")
     print("throttle: ", throttle)
 
     ##### log flight data for intruder drone
@@ -483,15 +506,16 @@ while True:
     tn.write(rc(roll,pitch,throttle,1500,900,900,900,1500))
 
     # Display the resulting frame
-    frame = cv2.circle(frame, (x_d,y_d), 10, (255,0,0), -1)
+    frame = cv2.circle(frame, (x_d,y_d), 7, (255,0,0), -1)
     cv2.imshow("Frame", frame)
     out.write(frame)
 
     # Break the loop if 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        # tn.write(set(2))
-        tn.write(rc(1500,1500,1500,1500,900,900,900,900))
+        tn.write(set(2))
         print(tn.read_some())
+        time.sleep(2)
+        tn.write(rc(1500,1500,1500,1500,900,900,900,900))
         break
     # print(dt)
 

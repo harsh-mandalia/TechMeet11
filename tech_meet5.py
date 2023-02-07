@@ -5,8 +5,8 @@ from functools import reduce
 import struct
 import numpy as np
 from time import sleep
-# host = "192.168.4.1"  # Replace with the IP address of your PLUTO drone
-host = "192.168.0.141"
+host = "192.168.4.1"  # Replace with the IP address of your PLUTO drone
+# host = "192.168.0.141"
 port = "23"
 
 tn = telnetlib.Telnet(host, port)
@@ -66,16 +66,17 @@ print(tn.read_some())
 # tn.write(rc(1500,1500,1000,1500,901,901,1500,1500))
 # print(tn.read_some())
 
-# sleep(1)
+sleep(1)
 
 # tn.write(rc(1500,1500,1800,1500,901,901,901,1500))
 
-# #tn.write(set(1))
+# tn.write(set(1))
 
 # sleep(1)
 # tn.write(rc(1500,1500,1800,1500,901,901,1500,1500))
 # sleep(1)
 
+#tn.write(rc(1500,1500,1900,1500,901,901,900,1500))
 
 # sleep(1)
 # tn.write(rc(1500,1600,1800,1500,901,901,1500,1500))
@@ -87,8 +88,12 @@ print(tn.read_some())
 # tn.write(set(2))
 # print(tn.read_some())
 
-sleep(1)
+#sleep(3)
+print("alt hold on")
 
+tn.write(rc(1500,1500,2000,1500,901,901,1500,1500))
+
+# sleep(5)
 tn.write(rc(1500,1500,1500,1500,901,901,1500,900))
 print(tn.read_some())
 

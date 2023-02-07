@@ -43,7 +43,6 @@ def set(data):
     return bytes(cmd1)
 
 
-firstflag_green = 1
 firstflag_red = 1
 
 while True:
@@ -55,20 +54,11 @@ while True:
 
     # Create a mask for red color
     red_mask = cv2.inRange(hsv, lower_red, upper_red)
-    
-    # Create a mask for green color
-    green_mask = cv2.inRange(hsv, green_lower, green_upper)
 
     # Find contours in red mask
     red_contours, red_hierarchy = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Find contours in green mask
-    green_contours, green_hierarchy = cv2.findContours(green_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
-    threshold_area=10
-    for i in range(len(green_contours)):
-        if cv2.contourArea(green_contours[i])<threshold_area:
-            np.delete(green_contours,i)
+    threshold_area=1
     
     for i in range(len(red_contours)):
         if cv2.contourArea(red_contours[i])<threshold_area:
@@ -124,64 +114,12 @@ while True:
 
         # Put the coordinates on the bounding box
         cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-
-    if len(green_contours) > 0:
-        # enter for first time
-
-        if firstflag_green == 1:
-            
-            firstflag_green = 2
-                    # Find the largest contour in green contours
-            green_c = max(green_contours, key=cv2.contourArea)
-
-            # Draw a bounding box around the green contour
-            x2, y2, w2, h2 = cv2.boundingRect(green_c)
-            cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
-
-            # Calculate the center of the bounding box
-            center_OG = (x2 + int(w2/2), y2 + int(h2/2))
-            center_OG2 = np.array([x2 + int(w2/2), y2 + int(h2/2)])
-
-        
-            # Put the coordinates on the bounding box
-            cv2.putText(frame, str(center_OG), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        # Find the closest contour to OG_green in green contours
-        # print(green_contours)
-        # print(np.shape(green_contours))
-        meanlist = []
-        
-        for i in green_contours:
-            meanlist.append(np.array([np.mean(i[:,0,0]),np.mean(i[:,0,1]),i]))
-        dist = 10000
-        for j in meanlist:
-            
-            if dist > np.linalg.norm(j[0:2]-center_OG2):
-                dist = np.linalg.norm(j[0:2]-center_OG2)
-                new_center_g = j[0:2]
-                new_contour_g = j[2]
-        
-        center_OG2 = new_center_g
-            
-        
-        # green_c = max(green_contours, key=cv2.contourArea)
-
-        # Draw a bounding box around the green contour
-        x2, y2, w2, h2 = cv2.boundingRect(new_contour_g)
-        cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
-
-        # Calculate the center of the bounding box
-        center = (x2 + int(w2/2), y2 + int(h2/2))
-
-        # Put the coordinates on the bounding box
-        cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-    print(x1,x2,y1,y2)
-    x=int((x1+x2)/2)
-    y=int((y1+y2)/2)
-    z=np.round(distfunc(x1,y1,x2,y2),2)
-    print(z)
+    
+    
+    
+    print(x2,y2)
     print("fps:",cap.get(cv2.CAP_PROP_FPS),end=" ")
-    print("position:", (x,y,z)) 
+    print("position:", (x2,y2)) 
 
     # Display the resulting frame
     cv2.imshow("Frame", frame)
