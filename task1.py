@@ -30,49 +30,6 @@ def set(data):
     print(bytes(cmd1))
     return bytes(cmd1)
 
-
-#tn.write(rc(1500,1500,1500,1500,901,901,1500,900))
-#tn.write(rc(1500,1500,1000,1500,901,901,1500,1500))
-#print(tn.read_some())
-
-#sleep(1)
-
-#tn.write(rc(1500,1500,1800,1500,901,901,901,1500))
-
-#tn.write(set(1))
-
-#sleep(1)
-#tn.write(rc(1500,1500,1800,1500,901,901,1500,1500))
-#sleep(1)
-
-
-#sleep(1)
-#tn.write(rc(1500,1600,1800,1500,901,901,1500,1500))
-#sleep(0.5)
-#tn.write(rc(1500,1500,1800,1500,901,901,1500,1500))
-#sleep(1)
-
-#tn.write(set(2))
-#print(tn.read_some())
-
-# sleep(1)
-
-# tn.write(rc(1500,1500,1500,1500,901,901,1500,900))
-# print(tn.read_some())
-
-# while(1):
-#     tn.write(bytes(cmd1))
-#     print(bytes(cmd1))
-#     print(tn.read_some())
-#     sleep(0.1)
-
-# print(byt1)
-# print(tn.read_some())
-#attitude_data = tn.read_until(byt)
-#print(attitude_data)
-#roll,pitch,yaw = struct.unpack('<hhh',attitude_data[3:9])
-#print("Roll:",roll)  # Print the response from the drone
-
 # initialize pygame
 pygame.init()
 
