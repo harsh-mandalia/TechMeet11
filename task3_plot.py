@@ -16,12 +16,12 @@ port = "23"
 # tn2 = telnetlib.Telnet(host2, port)
 
 # Define the range of red color in HSV
-lower_red = np.array([136, 87, 111])
-upper_red = np.array([180, 255, 255])
+lower_red = np.array([150, 130, 130])
+upper_red = np.array([200, 255, 255])
 
 # Define the range of green color in HSV 235,228,138 : 231,231,184
-green_lower = np.array([50, 100, 160], np.uint8) #72
-green_upper = np.array([200, 200, 250], np.uint8)
+green_lower = np.array([80, 70, 90], np.uint8) #72
+green_upper = np.array([140, 255, 255], np.uint8)
 
 cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 864)
@@ -206,15 +206,21 @@ x2_d1,y2_d1=250,306
 t_10=10
 t11=30
 t12=40
-t13=60
+t13=50
 t14=70
+t15=90
+t16=100
+t17=110
 
 # time for drone2
-t_20=10
-t21=30
-t22=40
-t23=60
-t24=70
+t_20=30
+t21=40
+t22=50
+t23=70
+t24=90
+t25=100
+t26=110
+t27=130
 
 while True:
     # Capture frame-by-frame
@@ -222,6 +228,8 @@ while True:
 
     # Convert the frame to HSV color space
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    # print(hsv)
+    # hsv=frame
 
     # Create a mask for red color
     red_mask = cv2.inRange(hsv, lower_red, upper_red)
@@ -247,21 +255,33 @@ while True:
     if(t_cur<t11):
         x_1d,y_1d=path_xy(x1_d1,y1_d1,x1_d2,y1_d2,t_cur,t_10,t11)
     elif(t11<t_cur<t12):
-        x_1d,y_1d=path_xy(x1_d2,y1_d2,x1_d3,y1_d3,t_cur,t11,t12)
+        x_1d,y_1d=x1_d2,y1_d2
     elif(t12<t_cur<t13):
-        x_1d,y_1d=path_xy(x1_d3,y1_d3,x1_d4,y1_d4,t_cur,t12,t13)
+        x_1d,y_1d=path_xy(x1_d2,y1_d2,x1_d3,y1_d3,t_cur,t12,t13)
     elif(t13<t_cur<t14):
-        x_1d,y_1d=path_xy(x1_d4,y1_d4,x1_d1,y1_d1,t_cur,t13,t14)
+        x_1d,y_1d=x1_d3,y1_d3
+    elif(t14<t_cur<t15):
+        x_1d,y_1d=path_xy(x1_d3,y1_d3,x1_d4,y1_d4,t_cur,t14,t15)
+    elif(t15<t_cur<t16):
+        x_1d,y_1d=x1_d4,y1_d4
+    elif(t16<t_cur<t17):
+        x_1d,y_1d=path_xy(x1_d4,y1_d4,x1_d1,y1_d1,t_cur,t16,t17)
     z_1d=35
 
     if(t_cur<t21):
         x_2d,y_2d=path_xy(x2_d1,y2_d1,x2_d2,y2_d2,t_cur,t_20,t21)
     elif(t21<t_cur<t22):
-        x_2d,y_2d=path_xy(x2_d2,y2_d2,x2_d3,y2_d3,t_cur,t21,t22)
+        x_2d,y_2d=x2_d2,y2_d2
     elif(t22<t_cur<t23):
-        x_2d,y_2d=path_xy(x2_d3,y2_d3,x2_d4,y2_d4,t_cur,t22,t23)
+        x_2d,y_2d=path_xy(x2_d2,y2_d2,x2_d3,y2_d3,t_cur,t22,t23)
     elif(t23<t_cur<t24):
-        x_2d,y_2d=path_xy(x2_d4,y2_d4,x2_d1,y2_d1,t_cur,t23,t24)
+        x_2d,y_2d=x2_d3,y2_d3
+    elif(t24<t_cur<t25):
+        x_2d,y_2d=path_xy(x2_d3,y2_d3,x2_d4,y2_d4,t_cur,t24,t25)
+    elif(t25<t_cur<t26):
+        x_2d,y_2d=x2_d4,y2_d4
+    elif(t26<t_cur<t27):
+        x_2d,y_2d=path_xy(x2_d4,y2_d4,x2_d1,y2_d1,t_cur,t26,t27)
     z_2d=35
 
     # x_d,y_d = path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,5,15)
@@ -669,7 +689,7 @@ while True:
 
     ##### log flight data for intruder drone
     
-    header = ['time','z','z_dot']
+    header = ['time','z1','z1_dot', 'z2','z2_dot']
     with open(filename_to_log_drone_data, 'a', newline='') as f_object:
         writer_object = writer(f_object)
         data_ = [float(t_cur), float(error_1z), float(error_1z_dot), float(error_2z), float(error_2z_dot)]
@@ -719,9 +739,11 @@ Saved_data = pd.read_csv('data.csv')
 plt.figure(1)
 
 # plt.subplot(3,2,1)
-plt.plot(Saved_data['time'], Saved_data['z'])
-plt.plot(Saved_data['time'], Saved_data['z_dot'])
-plt.legend("z","z dot")
+plt.plot(Saved_data['time'], Saved_data['z1'])
+plt.plot(Saved_data['time'], Saved_data['z1_dot'])
+plt.plot(Saved_data['time'], Saved_data['z2'])
+plt.plot(Saved_data['time'], Saved_data['z2_dot'])
+plt.legend(["z1","z1 dot", "z2","z2 dot"])
 plt.grid()
 
 plt.show()

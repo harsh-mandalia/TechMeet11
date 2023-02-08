@@ -7,21 +7,25 @@ import pandas as pd
 from csv import writer
 import os
 
+# +++AT STA TP-Link_79FF 39314536
+
 host1 = "192.168.0.175"    #SURAJ
 host2 = "192.168.0.141"    #TECHMEET
-# host = "192.168.0.141" 
+# host2 = "192.168.0.170"    #SURAJ CAM
 port = "23"
 
 tn1 = telnetlib.Telnet(host1, port)
 tn2 = telnetlib.Telnet(host2, port)
-
+global stopflag1,stopflag2
+stopflag1 = 0
+stopflag2 = 0
 # Define the range of red color in HSV
-lower_red = np.array([136, 87, 111])
-upper_red = np.array([180, 255, 255])
+lower_red = np.array([140, 70, 70])
+upper_red = np.array([210, 255, 255])
 
 # Define the range of green color in HSV 235,228,138 : 231,231,184
-green_lower = np.array([50, 100, 160], np.uint8) #72
-green_upper = np.array([200, 200, 250], np.uint8)
+green_lower = np.array([90, 70, 70], np.uint8) #72
+green_upper = np.array([130, 255, 255], np.uint8)
 
 cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 864)
@@ -193,28 +197,34 @@ global x1_d1,y1_d1,x1_d2,y1_d2,x1_d3,y1_d3,x1_d4,y1_d4
 global t10,t11,t12,t13,t14
 # desired for drone1
 x1_d1,y1_d1=250,70
-x1_d2,y1_d2=740,70
-x1_d3,y1_d3=740,306
-x1_d4,y1_d4=250,306
+x1_d2,y1_d2=700,70
+x1_d3,y1_d3=700,280
+x1_d4,y1_d4=250,280
 # desired for drone2
 x2_d2,y2_d2=250,70
-x2_d3,y2_d3=740,70
-x2_d4,y2_d4=740,306
-x2_d1,y2_d1=250,306
+x2_d3,y2_d3=700,70
+x2_d4,y2_d4=700,280
+x2_d1,y2_d1=250,280
 
 # time for drone1
 t_10=10
 t11=30
 t12=40
-t13=60
+t13=50
 t14=70
+t15=90
+t16=100
+t17=110
 
 # time for drone2
-t_20=10
-t21=30
-t22=40
-t23=60
-t24=70
+t_20=30
+t21=40
+t22=50
+t23=70
+t24=90
+t25=100
+t26=110
+t27=130
 
 while True:
     # Capture frame-by-frame
@@ -247,21 +257,33 @@ while True:
     if(t_cur<t11):
         x_1d,y_1d=path_xy(x1_d1,y1_d1,x1_d2,y1_d2,t_cur,t_10,t11)
     elif(t11<t_cur<t12):
-        x_1d,y_1d=path_xy(x1_d2,y1_d2,x1_d3,y1_d3,t_cur,t11,t12)
+        x_1d,y_1d=x1_d2,y1_d2
     elif(t12<t_cur<t13):
-        x_1d,y_1d=path_xy(x1_d3,y1_d3,x1_d4,y1_d4,t_cur,t12,t13)
+        x_1d,y_1d=path_xy(x1_d2,y1_d2,x1_d3,y1_d3,t_cur,t12,t13)
     elif(t13<t_cur<t14):
-        x_1d,y_1d=path_xy(x1_d4,y1_d4,x1_d1,y1_d1,t_cur,t13,t14)
+        x_1d,y_1d=x1_d3,y1_d3
+    elif(t14<t_cur<t15):
+        x_1d,y_1d=path_xy(x1_d3,y1_d3,x1_d4,y1_d4,t_cur,t14,t15)
+    elif(t15<t_cur<t16):
+        x_1d,y_1d=x1_d4,y1_d4
+    elif(t16<t_cur<t17):
+        x_1d,y_1d=path_xy(x1_d4,y1_d4,x1_d1,y1_d1,t_cur,t16,t17)
     z_1d=35
 
     if(t_cur<t21):
         x_2d,y_2d=path_xy(x2_d1,y2_d1,x2_d2,y2_d2,t_cur,t_20,t21)
     elif(t21<t_cur<t22):
-        x_2d,y_2d=path_xy(x2_d2,y2_d2,x2_d3,y2_d3,t_cur,t21,t22)
+        x_2d,y_2d=x2_d2,y2_d2
     elif(t22<t_cur<t23):
-        x_2d,y_2d=path_xy(x2_d3,y2_d3,x2_d4,y2_d4,t_cur,t22,t23)
+        x_2d,y_2d=path_xy(x2_d2,y2_d2,x2_d3,y2_d3,t_cur,t22,t23)
     elif(t23<t_cur<t24):
-        x_2d,y_2d=path_xy(x2_d4,y2_d4,x2_d1,y2_d1,t_cur,t23,t24)
+        x_2d,y_2d=x2_d3,y2_d3
+    elif(t24<t_cur<t25):
+        x_2d,y_2d=path_xy(x2_d3,y2_d3,x2_d4,y2_d4,t_cur,t24,t25)
+    elif(t25<t_cur<t26):
+        x_2d,y_2d=x2_d4,y2_d4
+    elif(t26<t_cur<t27):
+        x_2d,y_2d=path_xy(x2_d4,y2_d4,x2_d1,y2_d1,t_cur,t26,t27)
     z_2d=35
 
     # x_d,y_d = path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,5,15)
@@ -519,10 +541,10 @@ while True:
 
     z=(z11+z12+z13+z14+z15)/5
 
-    if(z1<0):
-        z1=0
-    if(z1>50):
-        z1=50
+    if(z1<5):
+        z1=5
+    if(z1>100):
+        z1=100
 
     z210=z29
     z29=z28
@@ -537,10 +559,10 @@ while True:
 
     z=(z21+z22+z23+z24+z25)/5
 
-    if(z2<0):
-        z2=0
-    if(z2>50):
-        z2=50
+    if(z2<5):
+        z2=5
+    if(z2>100):
+        z2=100
 
 
     error_1z = z_1d-z1
@@ -554,7 +576,7 @@ while True:
     z12dot=z11dot
     z11dot=z_1dot
 
-    # z_dot=(5*z1dot+4*z2dot+3*z3dot+2*z4dot+1*z5dot)/(5+4+3+2+1)
+    z_1dot=(5*z11dot+4*z12dot+3*z13dot+2*z14dot+1*z15dot)/(5+4+3+2+1)
 
     z_1prev=z1
 
@@ -569,7 +591,7 @@ while True:
     z22dot=z22dot
     z22dot=z_2dot
 
-    # z_dot=(5*z2dot+4*z2dot+3*z3dot+2*z4dot+2*z5dot)/(5+4+3+2+2)
+    z_2dot=(5*z22dot+4*z22dot+3*z23dot+2*z24dot+2*z25dot)/(5+4+3+2+2)
 
     z_2prev=z2
 
@@ -598,20 +620,20 @@ while True:
     if(error_2y_dot>cap_y):
         error_2y_dot=cap_y
 
-    kp_z=15
-    kd_z=350    #365-456
+    kp_z=20
+    kd_z=400    #365-456
     ki_z=0.0
     throttle_offset=50
 
 
     kp_x=1
-    kd_x=20
+    kd_x=30
     
     kp_y=1
-    kd_y=20
+    kd_y=30
     kp_zx = 0
 
-    if(t_cur<5):
+    if(t_cur<2):
         print("inside")
         kp_z=7
         kp_x=0
@@ -620,33 +642,36 @@ while True:
         kd_y=0
         kp_zx = 0
     
-    pitch1 = int(1500 +12+ kp_x*error_1x + kd_x*error_1x_dot)
+    pitch1 = int(1500 +5+ kp_x*error_1x + kd_x*error_1x_dot)
     roll1 = int(1500 + kp_y*error_1y + kd_y*error_1y_dot)
     throttle1 = int(1500 + throttle_offset + kp_z*error_1z + kd_z*error_1z_dot + ki_z*error_1z_int + kp_zx*error_1x)
     
-    pitch2 = int(2500 +12+ kp_x*error_2x + kd_x*error_2x_dot)
-    roll2 = int(2500 + kp_y*error_2y + kd_y*error_2y_dot)
-    throttle2 = int(2500 + throttle_offset + kp_z*error_2z + kd_z*error_2z_dot + ki_z*error_2z_int + kp_zx*error_2x)
+    pitch2 = int(1505 + kp_x*error_2x + kd_x*error_2x_dot)
+    roll2 = int(1505 + kp_y*error_2y + kd_y*error_2y_dot)
+    throttle2 = int(1500 + throttle_offset + kp_z*error_2z + kd_z*error_2z_dot + ki_z*error_2z_int + kp_zx*error_2x)
 
-    if(pitch1>1550):
-        pitch1=1550
-    elif(pitch1<1450):
-        pitch1=1450
+    cap1=1600
+    cap2=1400
 
-    if(roll1>1550):
-        roll1=1550
-    elif(roll1<1450):
-        roll1=1450
+    if(pitch1>cap1):
+        pitch1=cap1
+    elif(pitch1<cap2):
+        pitch1=cap2
 
-    if(pitch2>1550):
-        pitch2=1550
-    elif(pitch2<1450):
-        pitch2=1450
+    if(roll1>cap1):
+        roll1=cap1
+    elif(roll1<cap2):
+        roll1=cap2
 
-    if(roll2>1550):
-        roll2=1550
-    elif(roll2<1450):
-        roll2=1450
+    if(pitch2>cap1):
+        pitch2=cap1
+    elif(pitch2<cap2):
+        pitch2=cap2
+
+    if(roll2>cap1):
+        roll2=cap1
+    elif(roll2<cap2):
+        roll2=cap2
         
     if(start_vel_flag==1):
         throttle2=1500
@@ -662,13 +687,13 @@ while True:
     print("throttle1: ", throttle1)
 
     print("e2z, ", np.round(kp_z*error_2z,1), "ex_2d", np.round(kd_z*error_2z_dot,1) ,end=" ")
-    print("throttle2: ", throttle2)
+    print("roll2: ", roll2)
 
     print()
 
     ##### log flight data for intruder drone
     
-    header = ['time','z','z_dot']
+    header = ['time','z1','z1_dot', 'z2','z2_dot']
     with open(filename_to_log_drone_data, 'a', newline='') as f_object:
         writer_object = writer(f_object)
         data_ = [float(t_cur), float(error_1z), float(error_1z_dot), float(error_2z), float(error_2z_dot)]
@@ -681,9 +706,12 @@ while True:
 
     # print("fps:",cap.get(cv2.CAP_PROP_FPS),end=" ")
     # print("position:", (x,y,z))
-
-    tn1.write(rc(roll1,pitch1,throttle1,1500,900,900,900,900))
-    tn2.write(rc(roll2,pitch2,throttle2,1500,900,900,900,900))
+    if stopflag1 == 0:
+        dthrottle1 = 1500
+    if stopflag2 == 0:
+        dthrottle2 = 1500
+    tn1.write(rc(roll1,pitch1,throttle1,1500,900,900,900,1500))
+    tn2.write(rc(roll2,pitch2,throttle2,1500,900,900,900,1500))
 
     # Display the resulting frame
     frame = cv2.circle(frame, (x_1d,y_1d), 7, (255,0,0), -1)
@@ -696,14 +724,23 @@ while True:
         # tn1.write(set(2))
         # print(tn1.read_some())
         # time.sleep(2)
+        stopflag1 = 1
+        dthrottle1 = 900
         tn1.write(rc(1500,1500,1500,1500,900,900,900,900))
-
+        print(tn1.read_some())
+    # if cv2.waitKey(1) & 0xFF == ord('w'):
         # tn2.write(set(2))
         # print(tn2.read_some())
         # time.sleep(2)
+        stopflag2 = 1
+        dthrottle2 = 900
         tn2.write(rc(1500,1500,1500,1500,900,900,900,900))
-
+        print(tn1.read_some())
         break
+
+    # if stopflag1 and stopflag2:
+    #     print("break")
+    #     break
     # print(dt)
 
 cap.release()
@@ -718,9 +755,11 @@ Saved_data = pd.read_csv('data.csv')
 plt.figure(1)
 
 # plt.subplot(3,2,1)
-plt.plot(Saved_data['time'], Saved_data['z'])
-plt.plot(Saved_data['time'], Saved_data['z_dot'])
-plt.legend("z","z dot")
+plt.plot(Saved_data['time'], Saved_data['z1'])
+plt.plot(Saved_data['time'], Saved_data['z1_dot'])
+plt.plot(Saved_data['time'], Saved_data['z2'])
+plt.plot(Saved_data['time'], Saved_data['z2_dot'])
+plt.legend(["z1","z1 dot", "z2","z2 dot"])
 plt.grid()
 
 plt.show()

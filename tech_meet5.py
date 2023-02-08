@@ -5,8 +5,8 @@ from functools import reduce
 import struct
 import numpy as np
 from time import sleep
-host = "192.168.4.1"  # Replace with the IP address of your PLUTO drone
-# host = "192.168.0.175"
+# host = "192.168.4.1"  # Replace with the IP address of your PLUTO drone
+host = "192.168.0.141"
 port = "23"
 
 tn = telnetlib.Telnet(host, port)

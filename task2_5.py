@@ -16,13 +16,13 @@ port = "23"
 
 tn = telnetlib.Telnet(host, port)
 
-# Define the range of red color in HSV 235,228,138 : 231,231,184
-lower_red = np.array([136, 87, 111])
-upper_red = np.array([180, 255, 255])
+# Define the range of red color in HSV
+lower_red = np.array([150, 130, 130])
+upper_red = np.array([200, 255, 255])
 
-# Define the range of green color in HSV
-green_lower = np.array([50, 100, 160], np.uint8) #72
-green_upper = np.array([200, 200, 250], np.uint8)
+# Define the range of green color in HSV 235,228,138 : 231,231,184
+green_lower = np.array([80, 70, 90], np.uint8) #72
+green_upper = np.array([140, 255, 255], np.uint8)
 
 cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 864)
@@ -161,6 +161,7 @@ while True:
 
     # Create a mask for green color
     green_mask = cv2.inRange(hsv, green_lower, green_upper)
+    # green_mask=red_mask
 
     # Find contours in red mask
     red_contours, red_hierarchy = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -173,7 +174,7 @@ while True:
 
     x_d=510
     y_d=245
-    z_d=40
+    z_d=35
     
     # x_d1,y_d1=250,70
     # x_d2,y_d2=740,70
@@ -445,8 +446,8 @@ while True:
     if(error_y_dot>cap_y):
         error_y_dot=cap_y
 
-    kp_z=15
-    kd_z=350    #365-456
+    kp_z=14
+    kd_z=400    #365-456
     ki_z=0.0
     throttle_offset=50
 

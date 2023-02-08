@@ -171,30 +171,30 @@ while True:
     # x1,x2,y1,y2 = 0,0,0,0
     # w1,w2,h1,h2 = 0,0,0,0
 
-    # x_d=510
-    # y_d=245
-    # z_d=35
-    
-    x_d1,y_d1=250,70
-    x_d2,y_d2=740,70
-    x_d3,y_d3=740,306
-    x_d4,y_d4=250,306
-
-    t_0=10
-    t1=30
-    t2=40
-    t3=60
-    t4=70
-    # print(t_cur)
-    if(t_cur<t1):
-        x_d,y_d=path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,t_0,t1)
-    elif(t1<t_cur<t2):
-        x_d,y_d=path_xy(x_d2,y_d2,x_d3,y_d3,t_cur,t1,t2)
-    elif(t2<t_cur<t3):
-        x_d,y_d=path_xy(x_d3,y_d3,x_d4,y_d4,t_cur,t2,t3)
-    elif(t3<t_cur<t4):
-        x_d,y_d=path_xy(x_d4,y_d4,x_d1,y_d1,t_cur,t3,t4)
+    x_d=510
+    y_d=245
     z_d=35
+    
+    # x_d1,y_d1=250,70
+    # x_d2,y_d2=740,70
+    # x_d3,y_d3=740,306
+    # x_d4,y_d4=250,306
+
+    # t_0=10
+    # t1=30
+    # t2=40
+    # t3=60
+    # t4=70
+    # # print(t_cur)
+    # if(t_cur<t1):
+    #     x_d,y_d=path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,t_0,t1)
+    # elif(t1<t_cur<t2):
+    #     x_d,y_d=path_xy(x_d2,y_d2,x_d3,y_d3,t_cur,t1,t2)
+    # elif(t2<t_cur<t3):
+    #     x_d,y_d=path_xy(x_d3,y_d3,x_d4,y_d4,t_cur,t2,t3)
+    # elif(t3<t_cur<t4):
+    #     x_d,y_d=path_xy(x_d4,y_d4,x_d1,y_d1,t_cur,t3,t4)
+    # z_d=35
 
 
     # x_d,y_d = path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,5,15)
