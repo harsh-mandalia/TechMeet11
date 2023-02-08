@@ -10,19 +10,19 @@ import os
 # +++AT MODE 3
 # +++AT STA TP-Link_79FF 39314536
 
-# host = "192.168.4.1"
-host = "192.168.0.175" 
+host = "192.168.4.1"
+# host = "192.168.0.175" 
 port = "23"
 
 tn = telnetlib.Telnet(host, port)
 
-# Define the range of red color in HSV
+# Define the range of red color in HSV 235,228,138 : 231,231,184
 lower_red = np.array([136, 87, 111])
 upper_red = np.array([180, 255, 255])
 
 # Define the range of green color in HSV
-green_lower = np.array([25, 52, 72], np.uint8) #72
-green_upper = np.array([102, 255, 255], np.uint8)
+green_lower = np.array([50, 100, 160], np.uint8) #72
+green_upper = np.array([200, 200, 250], np.uint8)
 
 cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 864)
@@ -171,30 +171,30 @@ while True:
     # x1,x2,y1,y2 = 0,0,0,0
     # w1,w2,h1,h2 = 0,0,0,0
 
-    # x_d=510
-    # y_d=245
-    # z_d=35
+    x_d=510
+    y_d=245
+    z_d=40
     
-    x_d1,y_d1=250,70
-    x_d2,y_d2=740,70
-    x_d3,y_d3=740,306
-    x_d4,y_d4=250,306
+    # x_d1,y_d1=250,70
+    # x_d2,y_d2=740,70
+    # x_d3,y_d3=740,306
+    # x_d4,y_d4=250,306
 
-    t_0=10
-    t1=30
-    t2=40
-    t3=60
-    t4=70
-    # print(t_cur)
-    if(t_cur<t1):
-        x_d,y_d=path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,t_0,t1)
-    elif(t1<t_cur<t2):
-        x_d,y_d=path_xy(x_d2,y_d2,x_d3,y_d3,t_cur,t1,t2)
-    elif(t2<t_cur<t3):
-        x_d,y_d=path_xy(x_d3,y_d3,x_d4,y_d4,t_cur,t2,t3)
-    elif(t3<t_cur<t4):
-        x_d,y_d=path_xy(x_d4,y_d4,x_d1,y_d1,t_cur,t3,t4)
-    z_d=35
+    # t_0=10
+    # t1=30
+    # t2=40
+    # t3=60
+    # t4=70
+    # # print(t_cur)
+    # if(t_cur<t1):
+    #     x_d,y_d=path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,t_0,t1)
+    # elif(t1<t_cur<t2):
+    #     x_d,y_d=path_xy(x_d2,y_d2,x_d3,y_d3,t_cur,t1,t2)
+    # elif(t2<t_cur<t3):
+    #     x_d,y_d=path_xy(x_d3,y_d3,x_d4,y_d4,t_cur,t2,t3)
+    # elif(t3<t_cur<t4):
+    #     x_d,y_d=path_xy(x_d4,y_d4,x_d1,y_d1,t_cur,t3,t4)
+    # z_d=35
 
 
     # x_d,y_d = path_xy(x_d1,y_d1,x_d2,y_d2,t_cur,5,15)
@@ -224,106 +224,106 @@ while True:
     
     area1,area2=0,0
     xr,yr,wr,hr=x,y,0,0
-    if len(red_contours) > 0:
-        # enter for first time
-        if firstflag_red == 1:
-            
-            firstflag_red = 2
-            # Find the largest contour in red contours
-            red_c = max(red_contours, key=cv2.contourArea)
-
-            # Draw a bounding box around the red contour
-            xr, yr, wr, hr = cv2.boundingRect(red_c)
-            cv2.rectangle(frame, (xr, yr), (xr + wr, yr + hr), (0, 0, 255), 2)
-
-            # Calculate the center of the bounding box
-            center_OG = (xr + int(wr/2), yr + int(hr/2))
-            center_OG2 = np.array([xr + int(wr/2), yr + int(hr/2)])
-
-            # Put the coordinates on the bounding box
-            cv2.putText(frame, str(center_OG), (xr, yr-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-        # Find the closest contour to OG_red in green contours
-        meanlist = []
-        for i in red_contours:
-            meanlist.append(np.array([np.mean(i[:,0,0]),np.mean(i[:,0,1]),i]))
-        dist = 10000
-        for j in meanlist:
-            
-            if dist > np.linalg.norm(j[0:2]-center_OG2):
-                dist = np.linalg.norm(j[0:2]-center_OG2)
-                new_center_r = j[0:2]
-                new_contour_r = j[2]
-        
-        center_OG2 = new_center_r
-        area1=cv2.contourArea(new_contour_r)
-            
-        
-        # green_c = max(green_contours, key=cv2.contourArea)
-
-        # Draw a bounding box around the green contour
-        xr, yr, wr, hr = cv2.boundingRect(new_contour_r)
-        cv2.rectangle(frame, (xr, yr), (xr + wr, yr + hr), (0, 0, 255), 2)
-
-        # Calculate the center of the bounding box
-        center_r = (xr + int(wr/2), yr + int(hr/2))
-
-        # Put the coordinates on the bounding box
-        cv2.putText(frame, str(center_r), (xr, yr-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-
-    # if len(green_contours) > 0:
+    xg,yg,wg,hg=x,y,0,0
+    # if len(red_contours) > 0:
     #     # enter for first time
-
-    #     if firstflag_green == 1:
+    #     if firstflag_red == 1:
             
-    #         firstflag_green = 2
-    #                 # Find the largest contour in green contours
-    #         green_c = max(green_contours, key=cv2.contourArea)
+    #         firstflag_red = 2
+    #         # Find the largest contour in red contours
+    #         red_c = max(red_contours, key=cv2.contourArea)
 
-    #         # Draw a bounding box around the green contour
-    #         x2, y2, w2, h2 = cv2.boundingRect(green_c)
-    #         cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+    #         # Draw a bounding box around the red contour
+    #         xr, yr, wr, hr = cv2.boundingRect(red_c)
+    #         cv2.rectangle(frame, (xr, yr), (xr + wr, yr + hr), (0, 0, 255), 2)
 
     #         # Calculate the center of the bounding box
-    #         center_OG = (x2 + int(w2/2), y2 + int(h2/2))
-    #         center_OG2 = np.array([x2 + int(w2/2), y2 + int(h2/2)])
+    #         center_OG = (xr + int(wr/2), yr + int(hr/2))
+    #         center_OG2 = np.array([xr + int(wr/2), yr + int(hr/2)])
 
-        
     #         # Put the coordinates on the bounding box
-    #         cv2.putText(frame, str(center_OG), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-    #     # Find the closest contour to OG_green in green contours
-    #     # print(green_contours)
-    #     # print(np.shape(green_contours))
+    #         cv2.putText(frame, str(center_OG), (xr, yr-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    #     # Find the closest contour to OG_red in green contours
     #     meanlist = []
-    #     for i in green_contours:
+    #     for i in red_contours:
     #         meanlist.append(np.array([np.mean(i[:,0,0]),np.mean(i[:,0,1]),i]))
     #     dist = 10000
     #     for j in meanlist:
             
     #         if dist > np.linalg.norm(j[0:2]-center_OG2):
     #             dist = np.linalg.norm(j[0:2]-center_OG2)
-    #             new_center_g = j[0:2]
-    #             new_contour_g = j[2]
+    #             new_center_r = j[0:2]
+    #             new_contour_r = j[2]
         
-    #     center_OG2 = new_center_g
-    #     area2=cv2.contourArea(new_contour_g)
+    #     center_OG2 = new_center_r
+    #     area1=cv2.contourArea(new_contour_r)
             
         
     #     # green_c = max(green_contours, key=cv2.contourArea)
 
     #     # Draw a bounding box around the green contour
-    #     x2, y2, w2, h2 = cv2.boundingRect(new_contour_g)
-    #     cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+    #     xr, yr, wr, hr = cv2.boundingRect(new_contour_r)
+    #     cv2.rectangle(frame, (xr, yr), (xr + wr, yr + hr), (0, 0, 255), 2)
 
     #     # Calculate the center of the bounding box
-    #     center = (x2 + int(w2/2), y2 + int(h2/2))
+    #     center_r = (xr + int(wr/2), yr + int(hr/2))
 
     #     # Put the coordinates on the bounding box
-    #     cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    #     cv2.putText(frame, str(center_r), (xr, yr-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    x = xr
-    y = yr
-    z = area1/10
+
+    if len(green_contours) > 0:
+        # enter for first time
+
+        if firstflag_green == 1:
+            
+            firstflag_green = 2
+                    # Find the largest contour in green contours
+            green_c = max(green_contours, key=cv2.contourArea)
+
+            # Draw a bounding box around the green contour
+            xg, yg, wg, hg = cv2.boundingRect(green_c)
+            cv2.rectangle(frame, (xg, yg), (xg + wg, yg + hg), (0, 255, 0), 2)
+
+            # Calculate the center of the bounding box
+            center_OG = (xg + int(wg/2), yg + int(hg/2))
+            center_OG2 = np.array([xg + int(wg/2), yg + int(hg/2)])
+
+        
+            # Put the coordinates on the bounding box
+            cv2.putText(frame, str(center_OG), (xg, yg-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        # Find the closest contour to OG_green in green contours
+        # print(green_contours)
+        # print(np.shape(green_contours))
+        meanlist = []
+        for i in green_contours:
+            meanlist.append(np.array([np.mean(i[:,0,0]),np.mean(i[:,0,1]),i]))
+        dist = 10000
+        for j in meanlist:
+            if dist > np.linalg.norm(j[0:2]-center_OG2):
+                dist = np.linalg.norm(j[0:2]-center_OG2)
+                new_center_g = j[0:2]
+                new_contour_g = j[2]
+        
+        center_OG2 = new_center_g
+        area2=cv2.contourArea(new_contour_g)
+            
+        
+        # green_c = max(green_contours, key=cv2.contourArea)
+
+        # Draw a bounding box around the green contour
+        x2, y2, w2, h2 = cv2.boundingRect(new_contour_g)
+        cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+
+        # Calculate the center of the bounding box
+        center = (x2 + int(w2/2), y2 + int(h2/2))
+
+        # Put the coordinates on the bounding box
+        cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+    x = xg
+    y = yg
+    z = area2/10
 
     # print(x,y,z)
 
@@ -410,10 +410,10 @@ while True:
 
     z=(z1+z2+z3+z4+z5)/5
 
-    # if(z<0):
-    #     z=0
-    # if(z>50):
-    #     z=50
+    if(z<5):
+        z=5
+    if(z>100):
+        z=100
 
     error_z = z_d-z
     error_z_dot=z_d_dot - z_dot
@@ -451,11 +451,11 @@ while True:
     throttle_offset=50
 
 
-    kp_x=1
-    kd_x=20
+    kp_x=0.5
+    kd_x=10
     
-    kp_y=1
-    kd_y=20
+    kp_y=0.5
+    kd_y=10
     kp_zx = 0
 
     if(t_cur<3):
@@ -521,7 +521,7 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         tn.write(set(2))
         print(tn.read_some())
-        time.sleep(2)
+        # time.sleep(2)
         tn.write(rc(1500,1500,1500,1500,900,900,900,900))
         break
     # print(dt)
@@ -529,7 +529,7 @@ while True:
 cap.release()
 out.release()
 cv2.destroyAllWindows()
-tn.close()
+# tn.close()
 
 #### Final ploting code for intruder drone
 

@@ -7,20 +7,21 @@ import pandas as pd
 from csv import writer
 import os
 
-host1 = "192.168.0.175"
-host2 = "192.168.0.141" 
+host1 = "192.168.0.175"    #SURAJ
+host2 = "192.168.0.141"    #TECHMEET
 # host = "192.168.0.141" 
 port = "23"
 
 tn1 = telnetlib.Telnet(host1, port)
 tn2 = telnetlib.Telnet(host2, port)
+
 # Define the range of red color in HSV
 lower_red = np.array([136, 87, 111])
 upper_red = np.array([180, 255, 255])
 
-# Define the range of green color in HSV
-green_lower = np.array([25, 52, 72], np.uint8) #72
-green_upper = np.array([102, 255, 255], np.uint8)
+# Define the range of green color in HSV 235,228,138 : 231,231,184
+green_lower = np.array([50, 100, 160], np.uint8) #72
+green_upper = np.array([200, 200, 250], np.uint8)
 
 cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 864)
@@ -67,11 +68,17 @@ error_2x      = 0.0
 error_2x_prev = 0.0
 
 
-global x1,x2,x3,x4,x5
-x1,x2,x3,x4,x5 = 0.0,0.0,0.0,0.0,0.0
+global x11,x12,x13,x14,x15
+x11,x12,x13,x14,x15 = 0.0,0.0,0.0,0.0,0.0
 
-global x1dot,x2dot,x3dot,x4dot,x5dot
-x1dot,x2dot,x3dot,x4dot,x5dot = 0.0,0.0,0.0,0.0,0.0
+global x21,x22,x23,x24,x25
+x21,x22,x23,x24,x25 = 0.0,0.0,0.0,0.0,0.0
+
+global x11dot,x12dot,x13dot,x14dot,x15dot
+x11dot,x12dot,x13dot,x14dot,x15dot = 0.0,0.0,0.0,0.0,0.0
+
+global x21dot,x22dot,x23dot,x24dot,x25dot
+x21dot,x22dot,x23dot,x24dot,x25dot = 0.0,0.0,0.0,0.0,0.0
 
 global error_1y, error_1y_prev
 error_1y      = 0.0
@@ -190,10 +197,10 @@ x1_d2,y1_d2=740,70
 x1_d3,y1_d3=740,306
 x1_d4,y1_d4=250,306
 # desired for drone2
-x2_d1,y2_d1=250,70
-x2_d2,y2_d2=740,70
-x2_d3,y2_d3=740,306
-x2_d4,y2_d4=250,306
+x2_d2,y2_d2=250,70
+x2_d3,y2_d3=740,70
+x2_d4,y2_d4=740,306
+x2_d1,y2_d1=250,306
 
 # time for drone1
 t_10=10
@@ -283,7 +290,9 @@ while True:
         # x_d=460
     
     area1,area2=0,0
-    xr,yr,wr,hr=x,y,0,0
+    x1,x2,y1,y2=0,0,0,0
+    xr,yr,wr,hr=x1,y1,0,0
+    xg,yg,wg,hg=x2,y2,0,0
     if len(red_contours) > 0:
         # enter for first time
         if firstflag_red == 1:
@@ -340,16 +349,16 @@ while True:
             green_c = max(green_contours, key=cv2.contourArea)
 
             # Draw a bounding box around the green contour
-            x2, y2, w2, h2 = cv2.boundingRect(green_c)
-            cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+            xg, yg, wg, hg = cv2.boundingRect(green_c)
+            cv2.rectangle(frame, (xg, yg), (xg + wg, yg + hg), (0, 255, 0), 2)
 
             # Calculate the center of the bounding box
-            center_OG = (x2 + int(w2/2), y2 + int(h2/2))
-            center_OG2 = np.array([x2 + int(w2/2), y2 + int(h2/2)])
+            center_OG = (xg + int(wg/2), yg + int(hg/2))
+            center_OG2 = np.array([xg + int(wg/2), yg + int(hg/2)])
 
         
             # Put the coordinates on the bounding box
-            cv2.putText(frame, str(center_OG), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.putText(frame, str(center_OG), (xg, yg-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
         # Find the closest contour to OG_green in green contours
         # print(green_contours)
         # print(np.shape(green_contours))
@@ -371,22 +380,22 @@ while True:
         # green_c = max(green_contours, key=cv2.contourArea)
 
         # Draw a bounding box around the green contour
-        x2, y2, w2, h2 = cv2.boundingRect(new_contour_g)
-        cv2.rectangle(frame, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
+        xg, yg, wg, hg = cv2.boundingRect(new_contour_g)
+        cv2.rectangle(frame, (xg, yg), (xg + wg, yg + hg), (0, 255, 0), 2)
 
         # Calculate the center of the bounding box
-        center = (x2 + int(w2/2), y2 + int(h2/2))
-        xg = x2
-        yg = y2
+        center = (xg + int(wg/2), yg + int(hg/2))
         # Put the coordinates on the bounding box
-        cv2.putText(frame, str(center), (x2, y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        cv2.putText(frame, str(center), (xg, yg-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
 
     x1 = xr
     y1 = yr
+    z1=area1/10
 
     x2 = xg
     y2 = yg
+    z2=area2/10
     # print(area1,area2)
 
     ################## for x
@@ -482,8 +491,9 @@ while True:
     if(y2>854):
         y2=854
 
-    z1=np.round((wr**2+hr**2)**0.5,2)
-    z2=np.round((w2**2+h2**2)**0.5,2)
+    # z1=np.round((wr**2+hr**2)**0.5,2)
+    # z2=np.round((w2**2+h2**2)**0.5,2)
+
     ################## for z
 
     # z19=z18
@@ -654,6 +664,8 @@ while True:
     print("e2z, ", np.round(kp_z*error_2z,1), "ex_2d", np.round(kd_z*error_2z_dot,1) ,end=" ")
     print("throttle2: ", throttle2)
 
+    print()
+
     ##### log flight data for intruder drone
     
     header = ['time','z','z_dot']
@@ -670,8 +682,9 @@ while True:
     # print("fps:",cap.get(cv2.CAP_PROP_FPS),end=" ")
     # print("position:", (x,y,z))
 
-    tn1.write(rc(roll1,pitch1,throttle1,1500,900,900,900,1500))
-    tn2.write(rc(roll2,pitch2,throttle2,1500,900,900,900,1500))
+    tn1.write(rc(roll1,pitch1,throttle1,1500,900,900,900,900))
+    tn2.write(rc(roll2,pitch2,throttle2,1500,900,900,900,900))
+
     # Display the resulting frame
     frame = cv2.circle(frame, (x_1d,y_1d), 7, (255,0,0), -1)
     frame = cv2.circle(frame, (x_2d,y_2d), 7, (0,0,255), -1)
@@ -680,14 +693,14 @@ while True:
 
     # Break the loop if 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        tn1.write(set(2))
-        print(tn1.read_some())
-        time.sleep(2)
+        # tn1.write(set(2))
+        # print(tn1.read_some())
+        # time.sleep(2)
         tn1.write(rc(1500,1500,1500,1500,900,900,900,900))
 
-        tn2.write(set(2))
-        print(tn2.read_some())
-        time.sleep(2)
+        # tn2.write(set(2))
+        # print(tn2.read_some())
+        # time.sleep(2)
         tn2.write(rc(1500,1500,1500,1500,900,900,900,900))
 
         break

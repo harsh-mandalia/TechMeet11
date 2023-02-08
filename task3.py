@@ -6,10 +6,12 @@ import struct
 import numpy as np
 from time import sleep
 host = "192.168.4.1"  # Replace with the IP address of your PLUTO drone
-# host = "192.168.0.175"
+host1 = "192.168.0.175"    #SURAJ
+host2 = "192.168.0.141"    #TECHMEET
 port = "23"
 
-tn = telnetlib.Telnet(host, port)
+tn1 = telnetlib.Telnet(host1, port)
+tn2 = telnetlib.Telnet(host2, port)
 # print(tn.read_some())
 
 def add_checksum(cmd):
@@ -57,14 +59,21 @@ byt1 = bytes(str__ , 'utf-8')
 
 
 # tn.write(rc(1500,1500,1500,1500,901,901,1500,1500))
-tn.write(rc(1500,1500,1500,1500,901,901,1500,901))
-print(tn.read_some())
-tn.write(rc(1500,1500,1000,1500,901,901,1500,1500))
-print(tn.read_some())
+tn1.write(rc(1500,1500,1500,1500,901,901,1500,901))
+print(tn1.read_some())
+tn1.write(rc(1500,1500,1000,1500,901,901,1500,1500))
+print(tn1.read_some())
 # tn.write(rc(1500,1500,1500,1500,901,901,1500,901))
 # print(tn.read_some())
 # tn.write(rc(1500,1500,1000,1500,901,901,1500,1500))
 # print(tn.read_some())
+
+sleep(1)
+
+tn2.write(rc(1500,1500,1500,1500,901,901,1500,901))
+print(tn2.read_some())
+tn2.write(rc(1500,1500,1000,1500,901,901,1500,1500))
+print(tn2.read_some())
 
 sleep(1)
 
@@ -89,13 +98,16 @@ sleep(1)
 # print(tn.read_some())
 
 #sleep(3)
-print("alt hold on")
+# print("alt hold on")
 
-tn.write(rc(1500,1500,2000,1500,901,901,1500,1500))
+# tn1.write(rc(1500,1500,2000,1500,901,901,1500,1500))
 
 # sleep(5)
-tn.write(rc(1500,1500,1500,1500,901,901,1500,900))
-print(tn.read_some())
+tn1.write(rc(1500,1500,1500,1500,901,901,1500,900))
+print(tn1.read_some())
+sleep(1)
+tn2.write(rc(1500,1500,1500,1500,901,901,1500,900))
+print(tn2.read_some())
 
 # while(1):
 #     tn.write(bytes(cmd1))
@@ -109,4 +121,5 @@ print(tn.read_some())
 #print(attitude_data)
 #roll,pitch,yaw = struct.unpack('<hhh',attitude_data[3:9])
 #print("Roll:",roll)  # Print the response from the drone
-tn.close()
+tn1.close()
+tn2.close()
