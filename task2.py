@@ -10,15 +10,18 @@ import os
 # +++AT MODE 3
 # +++AT STA TP-Link_79FF 39314536
 
-# host = "192.168.4.1"
-host = "192.168.0.175" 
+host = "192.168.4.1"
+# host = "192.168.0.175" 
 port = "23"
 
 tn = telnetlib.Telnet(host, port)
 
 # Define the range of red color in HSV
-lower_red = np.array([136, 87, 111])
-upper_red = np.array([180, 255, 255])
+# lower_red = np.array([136, 87, 111])
+# upper_red = np.array([180, 255, 255])
+
+lower_red = np.array([140, 88, 165])
+upper_red = np.array([175, 255, 255])
 
 # Define the range of green color in HSV
 green_lower = np.array([25, 52, 72], np.uint8) #72
@@ -171,9 +174,9 @@ while True:
     # x1,x2,y1,y2 = 0,0,0,0
     # w1,w2,h1,h2 = 0,0,0,0
 
-    x_d=510
-    y_d=245
-    z_d=35
+    x_d=320
+    y_d=240
+    z_d=65
     
     # x_d1,y_d1=250,70
     # x_d2,y_d2=740,70
